@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { handle } from "@/lib/api-handler";
 
 export const dynamic = "force-dynamic";
 
@@ -7,7 +8,7 @@ function normalizePhone(raw: string) {
   return raw.replace(/[^\d+]/g, "");
 }
 
-export async function POST(req: Request) {
+export const POST = handle(async (req) => {
   const { phone } = await req.json().catch(() => ({ phone: "" }));
   const normalized = normalizePhone(phone || "");
 
@@ -18,7 +19,6 @@ export async function POST(req: Request) {
     );
   }
 
-  // FAKE SMS: generate a random 4-digit code and return it so the UI can show it.
   const code = String(Math.floor(1000 + Math.random() * 9000));
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
 
@@ -28,4 +28,4 @@ export async function POST(req: Request) {
   });
 
   return NextResponse.json({ phone: normalized, code });
-}
+});

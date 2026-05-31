@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { setSession } from "@/lib/session";
+import { handle } from "@/lib/api-handler";
 
 export const dynamic = "force-dynamic";
 
@@ -8,7 +9,7 @@ function normalizePhone(raw: string) {
   return raw.replace(/[^\d+]/g, "");
 }
 
-export async function POST(req: Request) {
+export const POST = handle(async (req) => {
   const body = await req.json().catch(() => ({}));
   const phone = normalizePhone(body.phone || "");
   const code = String(body.code || "").trim();
@@ -37,4 +38,4 @@ export async function POST(req: Request) {
   await setSession({ userId: user.id, phone: user.phone });
 
   return NextResponse.json({ user, isNew });
-}
+});

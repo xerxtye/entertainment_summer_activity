@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { handle } from "@/lib/api-handler";
 
 export const dynamic = "force-dynamic";
 
-// Events the user said YES to and were accepted into — these show on the map.
-export async function GET() {
+export const GET = handle(async () => {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ events: [] }, { status: 401 });
 
@@ -23,4 +23,4 @@ export async function GET() {
 
   const events = apps.map((a) => a.event);
   return NextResponse.json({ events });
-}
+});

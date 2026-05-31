@@ -1,28 +1,20 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { handle } from "@/lib/api-handler";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(req: Request) {
+export const POST = handle(async (req) => {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json().catch(() => ({}));
-  const {
-    title,
-    description,
-    locationName,
-    lat,
-    lng,
-    date,
-    photoUrl,
-    isPublic,
-  } = body;
+  const { title, description, locationName, lat, lng, date, photoUrl, isPublic } = body;
 
   if (!title || !date || typeof lat !== "number" || typeof lng !== "number") {
     return NextResponse.json(
-      { error: "Title, date and a map location are required." },
+      { error: "Title, date and location are required." },
       { status: 400 }
     );
   }
@@ -37,11 +29,10 @@ export async function POST(req: Request) {
       date: new Date(date),
       photoUrl: String(photoUrl || ""),
       isPublic: isPublic !== false,
-      // New events inherit the organizer's Boost subscription.
       isBoosted: user.isBoosted,
       organizerId: user.id,
     },
   });
 
   return NextResponse.json({ event });
-}
+});

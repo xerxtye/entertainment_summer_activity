@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { handle } from "@/lib/api-handler";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(req: Request) {
+export const POST = handle(async (req) => {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -18,8 +19,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Event not found" }, { status: 404 });
   }
 
-  // Public events need no host confirmation -> auto ACCEPTED.
-  // Private events stay PENDING until the host approves.
   const status = event.isPublic ? "ACCEPTED" : "PENDING";
 
   const application = await prisma.application.upsert({
@@ -34,4 +33,4 @@ export async function POST(req: Request) {
   });
 
   return NextResponse.json({ application, status });
-}
+});

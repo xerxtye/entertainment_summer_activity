@@ -1,12 +1,11 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
+import { handle } from "@/lib/api-handler";
 
 export const dynamic = "force-dynamic";
 
-// Fake "subscription" toggle. Flips the user's Boost flag and applies it to all
-// their events so promoted events surface higher in other users' feeds.
-export async function POST(req: Request) {
+export const POST = handle(async (req) => {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -24,4 +23,4 @@ export async function POST(req: Request) {
   });
 
   return NextResponse.json({ user: updated });
-}
+});
