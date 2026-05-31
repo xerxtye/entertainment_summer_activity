@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { FeedEvent } from "@/lib/types";
+import type { MapEvent } from "@/components/MapView";
 
 const MapView = dynamic(() => import("@/components/MapView"), {
   ssr: false,
@@ -16,33 +16,46 @@ const MapView = dynamic(() => import("@/components/MapView"), {
 type LoadState = "loading" | "empty" | "ready" | "error";
 
 export default function MapPage() {
-  const [events, setEvents] = useState<FeedEvent[]>([]);
+  const [events, setEvents] = useState<MapEvent[]>([]);
   const [state, setState] = useState<LoadState>("loading");
 
   useEffect(() => {
-    fetch("/api/events/accepted")
+    fetch("/api/events/map")
       .then((r) => r.json())
       .then((d) => {
-        const evs: FeedEvent[] = d.events ?? [];
+        const evs: MapEvent[] = d.events ?? [];
         setEvents(evs);
         setState(evs.length > 0 ? "ready" : "empty");
       })
       .catch(() => setState("error"));
   }, []);
 
+  const acceptedCount = events.filter((e) => e.isAccepted).length;
+  const totalCount = events.length;
+
   return (
     <div className="flex flex-1 flex-col">
       <header className="flex items-center justify-between px-5 pb-2 pt-5">
         <div>
           <h1 className="font-display text-2xl font-extrabold tracking-tight">
-            My Map
+            Map
           </h1>
-          <p className="text-xs text-neutral-500">Events you&apos;re going to</p>
+          <p className="text-xs text-neutral-500">
+            {state === "ready"
+              ? `${totalCount} events nearby · ${acceptedCount} you're going to`
+              : "Public events around you"}
+          </p>
         </div>
-        {state === "ready" && (
-          <span className="chip">{events.length} accepted</span>
-        )}
       </header>
+
+      {/* Legend */}
+      {state === "ready" && (
+        <div className="flex flex-wrap gap-2 px-5 pb-2">
+          <span className="chip">🟢 Going ({acceptedCount})</span>
+          <span className="chip">📍 Open ({totalCount - acceptedCount})</span>
+          {events.some((e) => e.isBoosted) && <span className="chip">⚡ Boosted</span>}
+        </div>
+      )}
 
       <div className="relative mx-4 mb-3 flex-1 overflow-hidden rounded-[1.75rem] ring-1 ring-white/10">
         {state === "loading" && (
@@ -65,8 +78,8 @@ export default function MapPage() {
             <div className="text-5xl">🧭</div>
             <h2 className="mt-3 font-display text-lg font-bold">No events yet</h2>
             <p className="mt-2 text-sm text-neutral-400">
-              Swipe right on events and join them — accepted ones appear here on
-              the map.
+              Create an event or wait for others to post — public events will
+              appear here automatically.
             </p>
           </div>
         )}
