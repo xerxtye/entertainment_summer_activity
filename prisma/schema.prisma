@@ -1,0 +1,84 @@
+// Touch the Grass — data model
+// Swap `provider` to "postgresql" (and DATABASE_URL) to deploy on Vercel/Neon.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  phone     String   @unique
+  name      String   @default("New Grasshopper")
+  about     String   @default("")
+  photoUrl  String   @default("")
+  isBoosted Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  events       Event[]       @relation("Organizer")
+  swipes       Swipe[]
+  applications Application[]
+}
+
+model VerificationCode {
+  id        String   @id @default(cuid())
+  phone     String
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([phone])
+}
+
+model Event {
+  id           String   @id @default(cuid())
+  title        String
+  description  String   @default("")
+  locationName String   @default("")
+  lat          Float
+  lng          Float
+  date         DateTime
+  photoUrl     String   @default("")
+  isPublic     Boolean  @default(true)
+  isBoosted    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  organizerId String
+  organizer   User   @relation("Organizer", fields: [organizerId], references: [id], onDelete: Cascade)
+
+  swipes       Swipe[]
+  applications Application[]
+}
+
+model Swipe {
+  id        String   @id @default(cuid())
+  direction String // "LIKE" | "SKIP"
+  createdAt DateTime @default(now())
+
+  userId  String
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventId])
+  @@index([userId])
+}
+
+model Application {
+  id        String   @id @default(cuid())
+  message   String   @default("")
+  status    String   @default("PENDING") // "PENDING" | "ACCEPTED"
+  createdAt DateTime @default(now())
+
+  applicantId String
+  applicant   User   @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  eventId     String
+  event       Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([applicantId, eventId])
+  @@index([applicantId])
+}
