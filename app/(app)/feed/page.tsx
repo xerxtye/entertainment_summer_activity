@@ -44,11 +44,16 @@ export default async function FeedPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="flex items-center justify-between px-5 pb-2 pt-4">
-        <h1 className="text-xl font-extrabold">
-          🌱 <span className="align-middle">Discover</span>
-        </h1>
-        <span className="text-xs text-neutral-500">Swipe right to join</span>
+      <header className="flex items-center justify-between px-5 pb-2 pt-5">
+        <div>
+          <h1 className="font-display text-2xl font-extrabold tracking-tight">
+            Discover
+          </h1>
+          <p className="text-xs text-neutral-500">Swipe right to join the fun</p>
+        </div>
+        <span className="grid h-10 w-10 place-items-center rounded-full bg-brand-gradient text-lg shadow-glow">
+          🌱
+        </span>
       </header>
       <SwipeDeck initial={feed} />
     </div>

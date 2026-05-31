@@ -14,25 +14,30 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="sticky bottom-0 z-30 border-t border-neutral-800 bg-neutral-950/95 backdrop-blur">
-      <div className="mx-auto flex max-w-md items-stretch justify-around px-2 pb-[env(safe-area-inset-bottom)]">
+    <nav className="pointer-events-none fixed inset-x-0 bottom-0 z-30 mx-auto flex max-w-md justify-center px-4 pb-[max(env(safe-area-inset-bottom),0.75rem)] pt-2">
+      <div className="glass pointer-events-auto flex w-full items-stretch justify-around gap-1 rounded-[1.75rem] p-1.5 shadow-soft">
         {tabs.map((t) => {
           const active = pathname.startsWith(t.href);
+          const isCreate = t.href === "/create";
           return (
             <Link
               key={t.href}
               href={t.href}
-              className={`flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] font-medium transition-colors ${
-                active ? "text-grass-400" : "text-neutral-500 hover:text-neutral-300"
+              className={`flex flex-1 flex-col items-center gap-0.5 rounded-[1.4rem] py-2 text-[10.5px] font-semibold transition-all ${
+                active
+                  ? isCreate
+                    ? "bg-brand-gradient text-ink-900 shadow-glow"
+                    : "bg-white/10 text-brand-300"
+                  : "text-neutral-400 hover:text-neutral-200"
               }`}
             >
               <svg
-                width="22"
-                height="22"
+                width="21"
+                height="21"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                strokeWidth={active ? 2.4 : 2}
+                strokeWidth={active ? 2.5 : 2}
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >

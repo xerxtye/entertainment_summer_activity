@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 const LocationPicker = dynamic(() => import("@/components/LocationPicker"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-48 items-center justify-center rounded-2xl bg-neutral-800 text-sm text-neutral-500">
+    <div className="flex h-48 items-center justify-center rounded-2xl bg-ink-700 text-sm text-neutral-500">
       Loading map…
     </div>
   ),
@@ -71,8 +71,10 @@ export default function CreatePage() {
 
   return (
     <div className="flex flex-1 flex-col overflow-y-auto no-scrollbar">
-      <header className="px-5 pb-1 pt-4">
-        <h1 className="text-xl font-extrabold">✨ Create event</h1>
+      <header className="px-5 pb-1 pt-5">
+        <h1 className="font-display text-2xl font-extrabold tracking-tight">
+          Create event
+        </h1>
         <p className="text-xs text-neutral-500">
           Get people off the couch and onto the grass.
         </p>
@@ -135,7 +137,7 @@ export default function CreatePage() {
                 key={p}
                 onClick={() => setPhotoUrl(p)}
                 className={`h-16 w-24 shrink-0 overflow-hidden rounded-xl ring-2 ${
-                  photoUrl === p ? "ring-grass-500" : "ring-transparent"
+                  photoUrl === p ? "ring-brand-400" : "ring-transparent"
                 }`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -173,26 +175,11 @@ export default function CreatePage() {
         <button
           disabled={loading}
           onClick={submit}
-          className="w-full rounded-2xl bg-grass-500 py-3.5 text-lg font-semibold text-neutral-950 transition active:scale-[0.98] disabled:opacity-50"
+          className="btn-primary w-full py-3.5 text-lg"
         >
           {loading ? "Publishing…" : "Publish event"}
         </button>
       </div>
-
-      <style jsx>{`
-        :global(.input) {
-          width: 100%;
-          border-radius: 1rem;
-          border: 1px solid rgb(64 64 64);
-          background: rgb(10 10 10);
-          padding: 0.75rem 1rem;
-          font-size: 0.95rem;
-          outline: none;
-        }
-        :global(.input:focus) {
-          border-color: #7cb342;
-        }
-      `}</style>
     </div>
   );
 }
@@ -228,10 +215,10 @@ function Toggle({
   return (
     <button
       onClick={onClick}
-      className={`flex-1 rounded-2xl border p-3 text-left transition ${
+      className={`flex-1 rounded-2xl border p-3 text-left transition active:scale-[0.98] ${
         active
-          ? "border-grass-500 bg-grass-900/30"
-          : "border-neutral-700 bg-neutral-900"
+          ? "border-brand-400 bg-brand-500/15"
+          : "border-white/10 bg-ink-700"
       }`}
     >
       <div className="text-sm font-semibold">{title}</div>

@@ -28,14 +28,17 @@ export default function MapPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <header className="flex items-center justify-between px-5 pb-2 pt-4">
-        <h1 className="text-xl font-extrabold">🗺️ My Events</h1>
-        <span className="text-xs text-neutral-500">
-          {count} accepted
-        </span>
+      <header className="flex items-center justify-between px-5 pb-2 pt-5">
+        <div>
+          <h1 className="font-display text-2xl font-extrabold tracking-tight">
+            My Map
+          </h1>
+          <p className="text-xs text-neutral-500">Events you&apos;re going to</p>
+        </div>
+        <span className="chip">{count} accepted</span>
       </header>
 
-      <div className="relative flex-1 overflow-hidden">
+      <div className="relative mx-4 mb-3 flex-1 overflow-hidden rounded-[1.75rem] ring-1 ring-white/10">
         {events === null ? (
           <div className="flex h-full items-center justify-center text-sm text-neutral-500">
             Loading…

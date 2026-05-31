@@ -102,8 +102,10 @@ export default function ProfilePage() {
 
   return (
     <div className="flex flex-1 flex-col overflow-y-auto no-scrollbar pb-8">
-      <header className="flex items-center justify-between px-5 pb-2 pt-4">
-        <h1 className="text-xl font-extrabold">👤 Profile</h1>
+      <header className="flex items-center justify-between px-5 pb-2 pt-5">
+        <h1 className="font-display text-2xl font-extrabold tracking-tight">
+          Profile
+        </h1>
         <button onClick={logout} className="text-xs text-neutral-500 underline">
           Log out
         </button>
@@ -116,20 +118,22 @@ export default function ProfilePage() {
           <img
             src={photo}
             alt={user.name}
-            className="h-20 w-20 rounded-full object-cover ring-2 ring-grass-600"
+            className="h-20 w-20 rounded-full object-cover ring-2 ring-brand-500"
           />
           <div className="min-w-0 flex-1">
             {editing ? (
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-xl border border-neutral-700 bg-neutral-950 px-3 py-2 text-lg font-bold outline-none focus:border-grass-500"
+                className="input py-2 text-lg font-bold"
               />
             ) : (
               <div className="flex items-center gap-2">
-                <h2 className="truncate text-2xl font-extrabold">{user.name}</h2>
+                <h2 className="truncate font-display text-2xl font-extrabold">
+                  {user.name}
+                </h2>
                 {user.isBoosted && (
-                  <span className="rounded-full bg-amber-400 px-2 py-0.5 text-[10px] font-extrabold text-amber-950">
+                  <span className="rounded-full bg-brand-gradient px-2 py-0.5 text-[10px] font-extrabold text-ink-900">
                     ⚡ BOOST
                   </span>
                 )}
@@ -146,7 +150,7 @@ export default function ProfilePage() {
             {!editing && (
               <button
                 onClick={() => setEditing(true)}
-                className="text-xs text-grass-400"
+                className="text-xs font-semibold text-brand-300"
               >
                 Edit
               </button>
@@ -159,7 +163,7 @@ export default function ProfilePage() {
                 value={about}
                 onChange={(e) => setAbout(e.target.value)}
                 placeholder="Tell people what you're into…"
-                className="w-full resize-none rounded-xl border border-neutral-700 bg-neutral-950 px-3 py-2 text-sm outline-none focus:border-grass-500"
+                className="input resize-none py-2 text-sm"
               />
               <div className="flex gap-2">
                 <button
@@ -168,14 +172,14 @@ export default function ProfilePage() {
                     setName(user.name);
                     setAbout(user.about);
                   }}
-                  className="flex-1 rounded-xl border border-neutral-700 py-2 text-sm"
+                  className="flex-1 rounded-xl border border-white/10 py-2 text-sm"
                 >
                   Cancel
                 </button>
                 <button
                   disabled={saving}
                   onClick={saveProfile}
-                  className="flex-1 rounded-xl bg-grass-500 py-2 text-sm font-semibold text-neutral-950 disabled:opacity-50"
+                  className="btn-primary flex-1 py-2 text-sm"
                 >
                   {saving ? "Saving…" : "Save"}
                 </button>
@@ -230,21 +234,21 @@ export default function ProfilePage() {
             {events.map((e) => (
               <div
                 key={e.id}
-                className="rounded-2xl border border-neutral-800 bg-neutral-900 p-3"
+                className="rounded-2xl border border-white/10 bg-ink-700 p-3"
               >
                 <div className="flex items-center justify-between">
                   <span className="font-semibold">{e.title}</span>
                   <div className="flex gap-1">
                     {e.isBoosted && (
-                      <span className="rounded-full bg-amber-400 px-2 py-0.5 text-[10px] font-bold text-amber-950">
+                      <span className="rounded-full bg-brand-gradient px-2 py-0.5 text-[10px] font-bold text-ink-900">
                         ⚡
                       </span>
                     )}
                     <span
                       className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
                         e.isPublic
-                          ? "bg-grass-600 text-neutral-950"
-                          : "bg-neutral-700 text-neutral-200"
+                          ? "bg-brand-500 text-ink-900"
+                          : "bg-white/10 text-neutral-200"
                       }`}
                     >
                       {e.isPublic ? "Public" : "Private"}
@@ -264,7 +268,7 @@ export default function ProfilePage() {
                         src={a.applicant.photoUrl || avatarFor(a.applicant.id)}
                         alt={a.applicant.name}
                         title={`${a.applicant.name} · ${a.status}`}
-                        className="h-7 w-7 rounded-full object-cover ring-2 ring-neutral-900"
+                        className="h-7 w-7 rounded-full object-cover ring-2 ring-ink-700"
                       />
                     ))}
                   </div>
@@ -284,7 +288,7 @@ export default function ProfilePage() {
             {connections.map((c) => (
               <div
                 key={c.id}
-                className="flex items-center gap-3 rounded-2xl border border-neutral-800 bg-neutral-900 p-3"
+                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-ink-700 p-3"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -326,7 +330,7 @@ function Section({
 
 function Empty({ text }: { text: string }) {
   return (
-    <p className="rounded-2xl border border-dashed border-neutral-800 p-4 text-center text-sm text-neutral-500">
+    <p className="rounded-2xl border border-dashed border-white/10 p-4 text-center text-sm text-neutral-500">
       {text}
     </p>
   );

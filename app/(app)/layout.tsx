@@ -6,8 +6,11 @@ export default function AppLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen flex-col">
-      <main className="flex flex-1 flex-col overflow-hidden">{children}</main>
+    <div className="relative flex min-h-screen flex-col">
+      {/* Reserve space for the floating tab bar */}
+      <main className="flex flex-1 flex-col overflow-hidden pb-[88px]">
+        {children}
+      </main>
       <BottomNav />
     </div>
   );

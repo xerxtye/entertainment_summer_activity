@@ -18,6 +18,7 @@ export default function SwipeDeck({ initial }: { initial: FeedEvent[] }) {
 
   const current = events[index];
   const next = events[index + 1];
+  const third = events[index + 2];
 
   function recordSwipe(eventId: string, direction: "LIKE" | "SKIP") {
     fetch("/api/swipes", {
@@ -28,12 +29,11 @@ export default function SwipeDeck({ initial }: { initial: FeedEvent[] }) {
   }
 
   function commit(direction: "left" | "right") {
-    if (!current) return;
+    if (!current || flyingOut) return;
     setFlyingOut(direction);
     const liked = direction === "right";
     recordSwipe(current.id, liked ? "LIKE" : "SKIP");
     const swiped = current;
-    // Let the card animate off, then advance.
     setTimeout(() => {
       setIndex((i) => i + 1);
       setDrag({ x: 0, y: 0 });
@@ -78,7 +78,9 @@ export default function SwipeDeck({ initial }: { initial: FeedEvent[] }) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
         <div className="text-6xl">🌾</div>
-        <h2 className="mt-4 text-xl font-bold">You&apos;ve seen them all</h2>
+        <h2 className="mt-4 font-display text-xl font-bold">
+          You&apos;ve seen them all
+        </h2>
         <p className="mt-2 text-sm text-neutral-400">
           Check back later for new events — or create your own and get people
           off the couch.
@@ -89,10 +91,16 @@ export default function SwipeDeck({ initial }: { initial: FeedEvent[] }) {
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="relative flex-1 px-4 pb-4">
+      <div className="relative flex-1 px-4 pb-3">
+        {/* Third card (deep peek) */}
+        {third && (
+          <div className="absolute inset-x-4 inset-y-0 scale-[0.9] opacity-30">
+            <EventCard event={third} />
+          </div>
+        )}
         {/* Next card (peek) */}
         {next && (
-          <div className="absolute inset-x-4 inset-y-0 scale-[0.96] opacity-60">
+          <div className="absolute inset-x-4 inset-y-0 scale-[0.95] opacity-70">
             <EventCard event={next} />
           </div>
         )}
@@ -109,15 +117,15 @@ export default function SwipeDeck({ initial }: { initial: FeedEvent[] }) {
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
         >
-          {/* LIKE / SKIP stamps */}
+          {/* SAVE / SKIP stamps */}
           <div
-            className="pointer-events-none absolute left-5 top-6 z-10 rotate-[-18deg] rounded-xl border-4 border-grass-400 px-3 py-1 text-2xl font-extrabold uppercase text-grass-400"
+            className="pointer-events-none absolute left-6 top-8 z-10 rotate-[-16deg] rounded-2xl border-4 border-brand-400 bg-brand-500/15 px-4 py-1.5 text-2xl font-extrabold uppercase tracking-wide text-brand-300 backdrop-blur"
             style={{ opacity: likeOpacity }}
           >
             Interested
           </div>
           <div
-            className="pointer-events-none absolute right-5 top-6 z-10 rotate-[18deg] rounded-xl border-4 border-red-400 px-3 py-1 text-2xl font-extrabold uppercase text-red-400"
+            className="pointer-events-none absolute right-6 top-8 z-10 rotate-[16deg] rounded-2xl border-4 border-red-400 bg-red-500/15 px-4 py-1.5 text-2xl font-extrabold uppercase tracking-wide text-red-300 backdrop-blur"
             style={{ opacity: skipOpacity }}
           >
             Skip
@@ -128,18 +136,18 @@ export default function SwipeDeck({ initial }: { initial: FeedEvent[] }) {
       </div>
 
       {/* Action buttons */}
-      <div className="flex items-center justify-center gap-6 px-4 pb-2 pt-1">
+      <div className="flex items-center justify-center gap-5 px-4 pb-1 pt-1">
         <button
           aria-label="Skip"
           onClick={() => commit("left")}
-          className="flex h-16 w-16 items-center justify-center rounded-full border border-neutral-700 bg-neutral-900 text-3xl text-red-400 shadow-lg transition active:scale-90"
+          className="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-ink-700 text-2xl text-red-400 shadow-soft transition hover:border-red-400/40 active:scale-90"
         >
           ✕
         </button>
         <button
           aria-label="Interested"
           onClick={() => commit("right")}
-          className="flex h-20 w-20 items-center justify-center rounded-full bg-grass-500 text-4xl text-neutral-950 shadow-lg transition active:scale-90"
+          className="flex h-[68px] w-[68px] items-center justify-center rounded-full bg-brand-gradient text-3xl text-ink-900 shadow-glow transition active:scale-90"
         >
           ♥
         </button>

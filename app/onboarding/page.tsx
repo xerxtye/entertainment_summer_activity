@@ -53,11 +53,13 @@ export default function OnboardingPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-grass-900 via-neutral-950 to-neutral-950 px-6">
+    <div className="flex min-h-screen flex-col px-6">
       <div className="flex flex-1 flex-col justify-center">
         <div className="mb-10 text-center">
-          <div className="mb-3 text-5xl">🌱</div>
-          <h1 className="text-3xl font-extrabold tracking-tight">
+          <div className="mx-auto mb-4 grid h-20 w-20 place-items-center rounded-[1.75rem] bg-brand-gradient text-4xl shadow-glow">
+            🌱
+          </div>
+          <h1 className="font-display text-4xl font-extrabold tracking-tight">
             Touch the Grass
           </h1>
           <p className="mt-2 text-sm text-neutral-400">
@@ -78,12 +80,12 @@ export default function OnboardingPage() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && phone && requestCode()}
-              className="w-full rounded-2xl border border-neutral-700 bg-neutral-900 px-4 py-3.5 text-lg outline-none focus:border-grass-500"
+              className="input text-lg"
             />
             <button
               disabled={loading || !phone}
               onClick={requestCode}
-              className="w-full rounded-2xl bg-grass-500 py-3.5 text-lg font-semibold text-neutral-950 transition active:scale-[0.98] disabled:opacity-50"
+              className="btn-primary w-full py-3.5 text-lg"
             >
               {loading ? "Sending..." : "Send code"}
             </button>
@@ -94,9 +96,9 @@ export default function OnboardingPage() {
         ) : (
           <div className="space-y-4">
             {sentCode && (
-              <div className="rounded-2xl border border-grass-700 bg-grass-900/40 p-3 text-center text-sm">
+              <div className="glass rounded-2xl p-3 text-center text-sm">
                 <span className="text-neutral-400">Demo SMS — your code is </span>
-                <span className="text-lg font-bold tracking-widest text-grass-300">
+                <span className="text-lg font-bold tracking-widest text-brand-300">
                   {sentCode}
                 </span>
               </div>
@@ -112,12 +114,12 @@ export default function OnboardingPage() {
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
               onKeyDown={(e) => e.key === "Enter" && code.length === 4 && verify()}
-              className="w-full rounded-2xl border border-neutral-700 bg-neutral-900 px-4 py-3.5 text-center text-2xl tracking-[0.5em] outline-none focus:border-grass-500"
+              className="input text-center text-2xl tracking-[0.5em]"
             />
             <button
               disabled={loading || code.length !== 4}
               onClick={verify}
-              className="w-full rounded-2xl bg-grass-500 py-3.5 text-lg font-semibold text-neutral-950 transition active:scale-[0.98] disabled:opacity-50"
+              className="btn-primary w-full py-3.5 text-lg"
             >
               {loading ? "Verifying..." : "Verify & enter"}
             </button>
